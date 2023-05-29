@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Rigidbody2D rb;
+    public int health;
+    public int point;
+    
+    private Rigidbody2D rb;
     [Header("Attributes")]
     [SerializeField] private float moveSpeed = 2f;
 
@@ -15,8 +17,22 @@ public class Enemy : MonoBehaviour
     {
         target = PathFinding.main.path[pathIndex];
         rb = GetComponent<Rigidbody2D>();
+        rb.angularDrag = 10f;
+        rb.AddTorque(10f);
+        rb.useAutoMass = false;
     }
-
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+    private void Die()
+    {
+        Destroy(gameObject);
+    }
     private void Update()
     {
         if(Vector2.Distance(target.position, transform.position) <= 0.1f)
