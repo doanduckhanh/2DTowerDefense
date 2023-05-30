@@ -1,9 +1,15 @@
+<<<<<<< Updated upstream
 using System.Collections;
 using System.Collections.Generic;
+=======
+using System.Collections.Generic;
+using System.Transactions;
+>>>>>>> Stashed changes
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+<<<<<<< Updated upstream
     public List<GameObject> enemyPrefabs;
     public float spawnDelay = 3f;
     public int numberOfWaves = 2;
@@ -58,3 +64,81 @@ public class WaveManager : MonoBehaviour
     }
 }
 
+=======
+    public List<Wave> waves;
+    public float waveInterval = 10f;
+    public Transform spawnPoint;
+    public float difficultyIncreaseInterval = 30f;
+    public int difficultyIncreaseAmount = 1;
+    public int maxDifficultyLevel = 10;
+
+    private int currentWaveIndex = 0;
+    private float timeSinceLastWave = 0f;
+    private float timeSinceLastDifficultyIncrease = 0f;
+    private int currentDifficultyLevel = 1;
+    private bool isGameOver = false;
+    private Queue<Wave> waveQueue = new Queue<Wave>();
+
+    private void Start()
+    {
+        foreach (Wave wave in waves)
+        {
+            waveQueue.Enqueue(wave);
+        }
+    }
+
+    private void Update()
+    {
+        if (!isGameOver)
+        {
+            timeSinceLastWave += Time.deltaTime;
+            if (timeSinceLastWave >= waveInterval && waveQueue.Count > 0)
+            {
+                SpawnWave();
+                timeSinceLastWave = 0f;
+            }
+
+            timeSinceLastDifficultyIncrease += Time.deltaTime;
+            if (timeSinceLastDifficultyIncrease >= difficultyIncreaseInterval && currentDifficultyLevel < maxDifficultyLevel)
+            {
+                currentDifficultyLevel += difficultyIncreaseAmount;
+                Debug.Log("Difficulty increased to level " + currentDifficultyLevel);
+                timeSinceLastDifficultyIncrease = 0f;
+            }
+        }
+    }
+
+    private void SpawnWave()
+    {
+        Wave currentWave = waveQueue.Dequeue();
+        for (int i = 0; i < currentWave.enemyCount; i++)
+        {
+            GameObject enemyGO = Instantiate(currentWave.enemyPrefab, spawnPoint.position, Quaternion.Euler(0f,180f,0f));
+            Enemy enemy = enemyGO.GetComponent<Enemy>();
+            enemy.health = currentWave.enemyHealth * currentDifficultyLevel;
+            enemy.moveSpeed = currentWave.enemySpeed;
+            spawnPoint.position = new Vector2(spawnPoint.position.x, spawnPoint.position.y - 3.5f);
+        }
+        currentWaveIndex++;
+        spawnPoint.position = transform.position;
+        CheckGameOver();
+    }
+    private void CheckGameOver()
+    {
+        if (waveQueue.Count == 0)
+        {
+            isGameOver = true;
+            Debug.Log("Game Over");
+        }
+    }
+}
+
+[System.Serializable]
+public class Wave
+{
+    public GameObject enemyPrefab;
+    public int enemyCount;
+    public int enemyHealth;
+    public float enemySpeed;
+}
+>>>>>>> Stashed changes
