@@ -4,41 +4,40 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health;
-    public int point;
-    
-    private Rigidbody2D rb;
+    [Header("References")]
+    [SerializeField] private Rigidbody2D rb;
     [Header("Attributes")]
-    [SerializeField] public float moveSpeed = 2f;
+    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] private int health;
+
 
     private Transform target;
-    private int pathIndex; 
+    private int pathIndex;
+
+    //total number of change direction while travel along the path
+    private int changedDirectionTimes;
+
+    public int ChangedDirectionTimes
+    {
+        get { return changedDirectionTimes; }
+    }
     private void Start()
     {
         target = PathFinding.main.path[pathIndex];
         rb = GetComponent<Rigidbody2D>();
-        rb.angularDrag = 10f;
-        rb.AddTorque(10f);
-        rb.useAutoMass = false;
+
+        changedDirectionTimes = 0;
+
+        EventManager.AddListener(EventName.EnemyAttackedEvent, SubtractHealth);
     }
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-        if (health <= 0)
-        {
-            Die();
-        }
-    }
-    private void Die()
-    {
-        Destroy(gameObject);
-    }
+
     private void Update()
     {
-        if(Vector2.Distance(target.position, transform.position) <= 0.1f)
+        if (Vector2.Distance(target.position, transform.position) <= 0.1f)
         {
             pathIndex++;
-            if(pathIndex >= PathFinding.main.path.Length)
+            changedDirectionTimes++;
+            if (pathIndex >= PathFinding.main.path.Length)
             {
                 Destroy(gameObject);
                 return;
@@ -55,5 +54,15 @@ public class Enemy : MonoBehaviour
     {
         Vector2 direction = (target.position - transform.position).normalized;
         rb.velocity = direction * moveSpeed;
+    }
+
+    /// <summary>
+    /// Subtract enemy's healthy when bullet reached
+    /// </summary>
+    /// <param name="points">points to add</param>
+    public void SubtractHealth(int points)
+    {
+        //health -= points;
+        Debug.Log("Subtract 10 points");
     }
 }
