@@ -7,8 +7,8 @@ public class Enemy : MonoBehaviour
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
     [Header("Attributes")]
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private int health;
+    [SerializeField] public float moveSpeed = 2f;
+    [SerializeField] public int health;
 
 
     private Transform target;
@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
     {
         get { return changedDirectionTimes; }
     }
-    private void Start()
+    protected virtual void Start()
     {
         target = PathFinding.main.path[pathIndex];
         rb = GetComponent<Rigidbody2D>();
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
         EventManager.AddListener(EventName.EnemyAttackedEvent, SubtractHealth);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (Vector2.Distance(target.position, transform.position) <= 0.1f)
         {
