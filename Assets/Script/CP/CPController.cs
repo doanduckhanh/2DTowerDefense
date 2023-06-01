@@ -1,35 +1,34 @@
 using Assets.Script.Common;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CPController : MonoBehaviour
 {
-    private bool clicked = false;
-    private bool mouseIsOver = false;
+    SelectEvent selectEvent = new SelectEvent();
     // Start is called before the first frame update
     void Start()
     {
         this.gameObject.name = "CP";
+        transform.Find("SelectCircle").gameObject.SetActive(false);
+        SelectEventManager.AddSelectCPEventInvoker(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && mouseIsOver == true)
+    }
+    public void AddSelectCPEventListener(UnityAction<GameObject> listener)
+    {
+        selectEvent.AddListener(listener);
+    }
+    void OnMouseDown()
+    {
+        if (GameObject.Find("SelectCircle"))
         {
-            Common.showInterface(this.gameObject.name, this.gameObject, this.gameObject.transform);
-            GetComponent<CircleCollider2D>().enabled = false;
-
+            GameObject.Find("SelectCircle").gameObject.SetActive(false);
         }
-    }
-    void OnMouseOver()
-    {
-        //if (!GameObject.Find("hand")) { Common.showHand(true); }
-        mouseIsOver = true;
-    }
-    void OnMouseExit()
-    {
-        //if (GameObject.Find("hand")) { Common.showHand(false); }
-        mouseIsOver = false;
+        transform.Find("SelectCircle").gameObject.SetActive(true);
+        selectEvent.Invoke(this.gameObject);
     }
 }

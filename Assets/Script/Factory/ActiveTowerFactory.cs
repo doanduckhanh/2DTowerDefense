@@ -2,37 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ActiveTowerFactory : TowerFactory
 {
     [SerializeField]
-    private TowerLevel1 towerLv1Prefab;
+    private Archer archerLv1Prefab;
     [SerializeField]
-    private TowerLevel2 towerLv2Prefab;
+    private Archer archerLv2Prefab;
     [SerializeField]
-    private TowerLevel3 towerLv3Prefab;
-    public override ITower CreateTower(int towerLevel, Vector3 position)
+    private Archer archerLv3Prefab;
+    public override ITower CreateTower(string towerType, int towerLevel, Vector3 position)
     {
-        GameObject instance;
-        switch (towerLevel)
+        switch (towerType)
         {
-            case 1:
-                instance = Instantiate(towerLv1Prefab.gameObject, position, Quaternion.identity);
-                TowerLevel1 newTowerLv1 = instance.GetComponent<TowerLevel1>();
-                newTowerLv1.Initialize();
-                return newTowerLv1;
-            case 2:
-                instance = Instantiate(towerLv2Prefab.gameObject, position, Quaternion.identity);
-                TowerLevel2 newTowerLv2 = instance.GetComponent<TowerLevel2>();
-                newTowerLv2.Initialize();
-                return newTowerLv2;
-            case 3:
-                instance = Instantiate(towerLv3Prefab.gameObject, position, Quaternion.identity);
-                TowerLevel3 newTowerLv3 = instance.GetComponent<TowerLevel3>();
-                newTowerLv3.Initialize();
-                return newTowerLv3;
+            case "archer":
+                return CreateArcherTower(towerLevel, position);
             default:
                 return null;
         }
+        
+    }
+    private ITower CreateArcherTower(int towerLevel, Vector3 position)
+    {
+        GameObject instance;
+        GameObject prefab;
+        switch (towerLevel)
+        {
+            case 1:
+                prefab = archerLv1Prefab.gameObject;
+                break;
+            case 2:
+                prefab = archerLv2Prefab.gameObject;
+                break;
+            case 3:
+                prefab = archerLv3Prefab.gameObject;
+                break;
+            default:
+                return null;
+        }
+        instance = Instantiate(prefab, position, Quaternion.identity);
+        instance.transform.SetParent(GameObject.Find("ArcherTowers").transform);
+        Archer newTower = instance.GetComponent<Archer>();
+        newTower.Initialize();
+        return newTower;
     }
 }
