@@ -68,7 +68,6 @@
     <Compile Include="Assets\Tower_Defense_Pack\UI\MainMenu\MainMenu_Controller.cs" />
     <Compile Include="Assets\Tower_Defense_Pack\AT\Fire\Fire.cs" />
     <Compile Include="Assets\Tower_Defense_Pack\Scripts\Construction_Point\CP_Controller.cs" />
-    <Compile Include="Assets\Script\WaveEnemyManager.cs" />
     <Compile Include="Assets\Script\Towers\MagicianTower.cs" />
     <Compile Include="Assets\Script\Enemy\Bo.cs" />
     <Compile Include="Assets\Script\Event\IntEventInvoker.cs" />
@@ -116,7 +115,6 @@
     <Compile Include="Assets\Tower_Defense_Pack\Scripts\Archers_Tower\Fire_Pooling.cs" />
     <Compile Include="Assets\Tower_Defense_Pack\WavesEditor\saveProperty.cs" />
     <Compile Include="Assets\Tower_Defense_Pack\Scripts\Knights_Tower\Interface\Onclick_.cs" />
-    <Compile Include="Assets\Script\EnemyWave.cs" />
     <Compile Include="Assets\Script\Bullet\Bullet.cs" />
     <Compile Include="Assets\Tower_Defense_Pack\WavesEditor\enemyContent.cs" />
     <Compile Include="Assets\Script\Enemy\Tho.cs" />
